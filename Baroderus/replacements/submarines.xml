@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Diff file="Content/Texts/English/EnglishVanilla.xml" override="root" cleanup="false">
+  <replace sel="//submarine.name.barsuk">Melogale</replace>
+  <text-replace sel="Barsuk" ignoreCase="false">Melogale</text-replace>
+</Diff>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Diff file="Content/Characters/Human/names.xml" override="root" cleanup="false">
+  <replace sel="//names/firstname[@value='Alex']" asNode="true">
+    <firstname value="Oleksandr" tags="male" />
+  </replace>  
+  <add sel="//names" after="//names/firstname[@value='Oleksandr']">
+    <firstname value="Oleksandra" tags="female" />
+  </add>  
+  
+  <replace sel="//names/firstname[@value='Alla']/@value">Olena</replace>
+  <replace sel="//names/firstname[@value='Eugenia']/@value">Evgenia</replace>
+  <replace sel="//names/firstname[@value='Ina']/@value">Iryna</replace>
+  <replace sel="//names/firstname[@value='Katerina']/@value">Kateryna</replace>
+  <replace sel="//names/firstname[@value='Katherina']/@value">Katheryna</replace>
+  <replace sel="//names/firstname[@value='Larissa']/@value">Lesya</replace>
+  <replace sel="//names/firstname[@value='Lena']/@value">Lina</replace>
+</Diff>

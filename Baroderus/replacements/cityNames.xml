@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Diff file="Content/Map/cityNames.txt" override="root" cleanup="false">
+  <text-replace sel="Dolgovskoy">Dovgovskyy</text-replace>
+  <text-replace sel="Kogavostok">Kohaschid</text-replace>
+  <text-replace sel="Krytogorsk">Krytogora</text-replace>
+  <text-replace sel="Molovsk">Molovetckyy</text-replace>
+  <text-replace sel="Novaya Moskva">Novyy Kyiv</text-replace>
+  <text-replace sel="Topol">Bereza</text-replace>
+  <text-replace sel="Zamoroska">Kolotun</text-replace>
+</Diff>
