@@ -70,23 +70,51 @@ public class Replacer
     public Dictionary<string, string> GetAllReplacements()
     {
         Console.WriteLine(" [ Evaluating replacements ] ");
-        var dict = new Dictionary<string, string>();
+        
+        var diffNodesDict = ResolveDiffNodesFromFiles();
+        var outputFilesDict = EvaluateAllReplacements(diffNodesDict);
+
+        return outputFilesDict;
+    }
+
+    private Dictionary<string, string> EvaluateAllReplacements(Dictionary<string, List<DiffNode>> diffNodesDict)
+    {
+        var outputFilesDict = new Dictionary<string, string>();
+        foreach (var (filePath, diffNodes) in diffNodesDict)
+        {
+            var relativePath = Path.GetRelativePath(this.rootPath, filePath);
+            var postfix = diffNodes.Count > 0 ? $" ({diffNodes.Count} patches)" : "";
+            Console.WriteLine($"Patching {relativePath}{postfix}...");
+            var fileText = File.ReadAllText(filePath);
+
+            foreach (var (diffNode, _) in diffNodes.OrderBy(n => n.Order))
+            {
+                fileText = PerformXmlReplacements(fileText, diffNode);
+                outputFilesDict[filePath] = fileText;
+            }
+        }
+
+        return outputFilesDict;
+    }
+
+    private Dictionary<string, List<DiffNode>> ResolveDiffNodesFromFiles()
+    {
+        var diffNodesDict = new Dictionary<string, List<DiffNode>>();
         var templatePaths = Directory.GetFiles("replacements", "*.xml", SearchOption.AllDirectories);
         foreach (var templatePath in templatePaths)
         {
-            Replace(templatePath, dict);
+            TryResolveDiffNodes(templatePath, diffNodesDict);
         }
 
-        return dict;
+        return diffNodesDict;
     }
 
-    private void Replace(string templatePath, Dictionary<string, string> output)
+    private void TryResolveDiffNodes(string templatePath, Dictionary<string, List<DiffNode>> output)
     {
         try
         {
             Console.WriteLine("Evaluating updates for template " + Path.GetFileName(templatePath) + "...");
-            var template = ReadXml(templatePath);
-            ProcessReplacementsFile(template, output);
+            ResolveDiffNodes(templatePath, output);
         }
         catch (Exception e)
         {
@@ -95,7 +123,7 @@ public class Replacer
         }
     }
 
-    private void ResolveDiffNodes(string templatePath, Dictionary<string, List<XmlElement>> output)
+    private void ResolveDiffNodes(string templatePath, Dictionary<string, List<DiffNode>> output)
     {
         var doc = ReadXml(templatePath);
         var diffNodes = doc.SelectNodes("Diff|DiffCollection/Diff");
@@ -103,24 +131,14 @@ public class Replacer
         {
             throw new Exception("Diff node not found");
         }
-        
-        
-    }
 
-    private void ProcessReplacementsFile(XmlDocument doc, Dictionary<string, string> output)
-    {
-        var diffNodes = doc.SelectNodes("Diff|DiffCollection/Diff");
-        if (diffNodes.Count == 0)
-        {
-            throw new Exception("Diff node not found");
-        }
-        
-        foreach (XmlElement diffNode in diffNodes)
+        var nodes = diffNodes.Cast<XmlElement>().ToList();
+        foreach (var diffNode in nodes)
         {
             var fileAttr = diffNode.Attributes?["file"];
             if (fileAttr == null)
             {
-                throw new Exception("File node not found");
+                throw new Exception("\"file\" attribute not found");
             }
 
             var filePath = Path.Combine(this.rootPath, fileAttr.Value!);
@@ -129,17 +147,23 @@ public class Replacer
                 throw new Exception($"File {filePath} not found");
             }
 
-            var value = PerformXmlReplacements(filePath, diffNode);
-            if (!output.TryAdd(filePath, value))
+            int.TryParse(diffNode.Attributes?["order"]?.Value, out var order);
+            var item = new DiffNode(diffNode, order);
+            
+            // add node to output
+            if (output.TryGetValue(filePath, out var diffCollection))
             {
-                throw new Exception("Only single diff per file is supported");
+                diffCollection.Add(item);
+            }
+            else
+            {
+                output[filePath] = new List<DiffNode> { item };
             }
         }
     }
-
-    private string PerformXmlReplacements(string filePath, XmlNode diff)
+    
+    private string PerformXmlReplacements(string fileText, XmlNode diff)
     {
-        var fileText = File.ReadAllText(filePath);
         XDocument? fileDoc = null;
 
         void EnsureFileDoc()
@@ -269,4 +293,6 @@ public class Replacer
         doc.Load(stream);
         return doc;
     }
+
+    private record DiffNode(XmlElement XmlNode, int Order);
 }
