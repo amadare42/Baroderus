@@ -83,7 +83,7 @@ public class Replacer
         foreach (var (filePath, diffNodes) in diffNodesDict)
         {
             var relativePath = Path.GetRelativePath(this.rootPath, filePath);
-            var postfix = diffNodes.Count > 0 ? $" ({diffNodes.Count} patches)" : "";
+            var postfix = diffNodes.Count > 1 ? $" ({diffNodes.Count} patches)" : "";
             Console.WriteLine($"Patching {relativePath}{postfix}...");
             var fileText = File.ReadAllText(filePath);
 
@@ -113,7 +113,7 @@ public class Replacer
     {
         try
         {
-            Console.WriteLine("Evaluating updates for template " + Path.GetFileName(templatePath) + "...");
+            Console.WriteLine("Evaluating updates from " + Path.GetFileName(templatePath) + "...");
             ResolveDiffNodes(templatePath, output);
         }
         catch (Exception e)
@@ -196,7 +196,12 @@ public class Replacer
                         throw new Exception("Invalid replace node");
                     }
 
-                    foreach (var selectNode in fileDoc.EnumerateXPathObjects(sel))
+                    var nodes = fileDoc.EnumerateXPathObjects(sel).ToList();
+                    if (nodes.Count == 0)
+                    {
+                        Console.WriteLine($"Cannot find node to replace: {sel}");
+                    }
+                    foreach (var selectNode in nodes)
                     {
                         if (selectNode is XAttribute attr)
                         {
@@ -210,7 +215,18 @@ public class Replacer
                             }
                             else
                             {
-                                el.ReplaceNodes(XElement.Parse(value));
+                                el.RemoveNodes();
+                                foreach (var child in replaceNode.ChildNodes)
+                                {
+                                    if (child is XmlText text)
+                                    {
+                                        el.Add(text.Value);
+                                    }
+                                    else
+                                    {
+                                        el.Add(XElement.Parse(value));
+                                    }
+                                }
                             }
                         }
                         else

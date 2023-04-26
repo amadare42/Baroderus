@@ -32,18 +32,17 @@ void Run()
                 {
                     EnsureValidRootDir(programArgs);
                     var replacer = new Replacer(programArgs.RootDir);
-                    var replacements = replacer.GetAllReplacements();
-
-                    if (File.Exists(replacer.GetBackupDir()))
+                    if (Directory.Exists(replacer.GetBackupDir()))
                     {
                         Console.WriteLine("Backup dir detected. Should we restore the backup first? (y/n)");
-                        Console.WriteLine("Current backup will be overriden.If not sure, answer 'y'.");
+                        Console.WriteLine("Current backup will be overriden. If not sure, answer 'y'.");
                         if (ConsoleUtil.YesNo())
                         {
                             replacer.RestoreBackup(programArgs.TargetPath ?? programArgs.RootDir);
                         }
                     }
-
+                    
+                    var replacements = replacer.GetAllReplacements();
                     replacer.PerformBackup(replacements.Keys.ToList());
                     replacer.ProcessReplacements(programArgs.TargetPath ?? programArgs.RootDir, replacements);
 
@@ -110,7 +109,13 @@ void EnsureValidRootDir(RunArguments runArguments)
         if (File.Exists("rootDir.txt"))
         {
             runArguments.RootDir = File.ReadAllText("rootDir.txt");
+            if (Directory.Exists(runArguments.RootDir))
+            {
+                Console.WriteLine("Assuming Barotrauma is installed at " + runArguments.RootDir);
+                return;
+            }
         }
+        
         Console.WriteLine("Assuming Barotrauma is installed at " + runArguments.RootDir);
     }
 

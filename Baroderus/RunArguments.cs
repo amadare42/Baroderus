@@ -3,7 +3,7 @@ using Baroderus;
 
 class RunArguments
 {
-    public string RootDir { get; set; } = @"C:\Program Files (x86)\Steam\steamapps\common\Barotrauma";
+    public string RootDir { get; set; }
     public string? TargetPath { get; set; }
     public RunMode RunMode { get; set; }
     

@@ -8,12 +8,7 @@ public static class XmlUtils
     public static IEnumerable<XObject> EnumerateXPathObjects(this XDocument document, string xpath)
     {
         var result = document.XPathEvaluate(xpath);
-        if (result is IEnumerable<XObject> enumerable)
-        {
-            return enumerable;
-        }
-        
-        return Enumerable.Empty<XObject>();
+        return ((IEnumerable<object>)result).Cast<XObject>();
     }
 
     public static string PrintXML(string xml)

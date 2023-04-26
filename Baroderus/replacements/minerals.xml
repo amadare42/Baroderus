@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Diff file="Content/Texts/English/EnglishVanilla.xml" override="root" cleanup="false">
+  <replace sel="//entityname.amblygonite">Amblygonite (LiAlSo)</replace>
+  <replace sel="//entityname.esperite">Esperite (Zn2Pb)</replace>
+  <replace sel="//entityname.quartz">Quartz (Si2)</replace>
+  <replace sel="//entityname.aragonite">Aragonite (Ca2)</replace>
+  <replace sel="//entityname.galena">Galena (Pb2)</replace>
+  <replace sel="//entityname.sphalerite">Sphalerite (Zn3)</replace>
+  <replace sel="//entityname.bornite">Bornite (Cu2)</replace>
+  <replace sel="//entityname.graphite">Graphite (C2)</replace>
+  <replace sel="//entityname.stannite">Stannite (CuFeSn)</replace>
+  <replace sel="//entityname.brockite">Brockite (ThP)</replace>
+  <replace sel="//entityname.hydroxyapatite">Hydroxyapatite (CaP2)</replace>
+  <replace sel="//entityname.sylvite">Sylvite (NaK)</replace>
+  <replace sel="//entityname.cassiterite">Cassiterite (Sn3)</replace>
+  <replace sel="//entityname.ilmenite">Ilmenite (Ti)</replace>
+  <replace sel="//entityname.thorianite">Thorianite (Th2)</replace>
+  <replace sel="//entityname.chalcopyrite">Chalcopyrite (Cu2)</replace>
+  <replace sel="//entityname.ironore">Iron Ore (Fe4)</replace>
+  <replace sel="//entityname.titanite">Titanite (Ti3Fe)</replace>
+  <replace sel="//entityname.chamosite">Chamosite (Fe2Al2)</replace>
+  <replace sel="//entityname.langbeinite">Langbeinite (Mg2K)</replace>
+  <replace sel="//entityname.triphylite">Triphylite (Li)</replace>
+  <replace sel="//entityname.chrysoprase">Chrysoprase (Si2)</replace>
+  <replace sel="//entityname.lazulite">Lazulite (FeP)</replace>
+  <replace sel="//entityname.uraniumore">Uranium Ore (U3)</replace>
+  <replace sel="//entityname.cryolite">Cryolite (Na2)</replace>
+  <replace sel="//entityname.polyhalite">Polyhalite (CaK)</replace>
+  <replace sel="//entityname.diamond">Diamond (C3)</replace>
+  <replace sel="//entityname.pyromorphite">Pyromorphite (Cl2)</replace>
+</Diff>
